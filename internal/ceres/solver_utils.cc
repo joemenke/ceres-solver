@@ -54,7 +54,7 @@ std::string VersionString() {
 #endif
 
 #ifndef CERES_NO_SUITESPARSE
-  value += "-suitesparse-(" + std::string(CERES_SUITESPARSE_VERSION) + ")";
+  value += "-suitesparse-(4.2.1)";
 #endif
 
 #ifndef CERES_NO_CXSPARSE

@@ -33,6 +33,7 @@ cmake_minimum_required(VERSION 2.8.0)
 cmake_policy(VERSION 2.8)
 
 cmake_policy(SET CMP0003 NEW)
+cmake_policy(SET CMP0054 NEW)
 if (POLICY CMP0042)
   cmake_policy(SET CMP0042 NEW)
 endif()
@@ -260,8 +261,10 @@ if (SUITESPARSE)
   # built with SuiteSparse support.
 
   # Check for SuiteSparse and dependencies.
+  set(SuiteSparse_VERBOSE ON)
+  set(SuiteSparse_USE_LAPACK_BLAS ON)
   find_package(SuiteSparse)
-  if (SUITESPARSE_FOUND)
+  if (SuiteSparse_FOUND)
     # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
     # Ubuntu 13.10 cannot be used to link shared libraries.
     if (BUILD_SHARED_LIBS AND
@@ -282,13 +285,13 @@ if (SUITESPARSE)
     # built with SuiteSparse support.
     message("-- Found SuiteSparse ${SUITESPARSE_VERSION}, "
             "building with SuiteSparse.")
-  else (SUITESPARSE_FOUND)
+  else (SuiteSparse_FOUND)
     # Disable use of SuiteSparse if it cannot be found and continue.
     message("-- Did not find all SuiteSparse dependencies, disabling "
       "SuiteSparse support.")
     update_cache_variable(SUITESPARSE OFF)
     list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
-  endif (SUITESPARSE_FOUND)
+  endif (SuiteSparse_FOUND)
 else (SUITESPARSE)
   message("-- Building without SuiteSparse.")
   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_SUITESPARSE)
@@ -521,7 +524,7 @@ include_directories(
 include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
 
 if (SUITESPARSE)
-  include_directories(${SUITESPARSE_INCLUDE_DIRS})
+  include_directories(${SuiteSparse_INCLUDE_DIRS})
 endif (SUITESPARSE)
 
 if (CXSPARSE)
